@@ -1,5 +1,6 @@
 package com.jsonutils;
 
+import com.utils.framework.OnError;
 import com.utils.framework.collections.NavigationEntity;
 import com.utils.framework.collections.OnLoadingFinished;
 import com.utils.framework.io.IOExceptionListener;
@@ -30,7 +31,8 @@ class ElementsLoader<T> {
     }
 
     public void getElementsOfPage(NavigationEntity<T> navigationEntity,
-                                  OnLoadingFinished<T> onLoadingFinished) {
+                                  OnLoadingFinished<T> onLoadingFinished,
+                                  OnError onError) {
         int offset = navigationEntity.getLoadedElementsCount();
         params.put(offsetParamName, offset);
         List<T> result = null;
@@ -46,9 +48,9 @@ class ElementsLoader<T> {
         } catch (IOException e) {
             if(ioExceptionListener != null){
                 ioExceptionListener.onIOError(e);
-            } else {
-                throw new RuntimeException(e);
             }
+
+            onError.onError(e);
         }
 
         if(result == null){

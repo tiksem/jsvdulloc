@@ -1,5 +1,6 @@
 package com.jsonutils;
 
+import com.utils.framework.OnError;
 import com.utils.framework.collections.NavigationEntity;
 import com.utils.framework.collections.NavigationIterator;
 import com.utils.framework.collections.NavigationList;
@@ -22,8 +23,8 @@ public class JsonRequestNavigation<T> {
     public NavigationList<T> getNavigationList() {
         return new NavigationList<T>() {
             @Override
-            public void getElementsOfPage(int pageNumber, OnLoadingFinished<T> onPageLoadingFinished) {
-                elementsLoader.getElementsOfPage(this, onPageLoadingFinished);
+            public void getElementsOfPage(int pageNumber, OnLoadingFinished<T> onPageLoadingFinished, OnError onError) {
+                elementsLoader.getElementsOfPage(this, onPageLoadingFinished, onError);
             }
         };
     }
@@ -31,8 +32,8 @@ public class JsonRequestNavigation<T> {
     public Iterator<T> getNavigationIterator() {
         return new NavigationIterator<T>() {
             @Override
-            public void getElementsOfPage(int pageNumber, OnLoadingFinished<T> onPageLoadingFinished) {
-                elementsLoader.getElementsOfPage(this, onPageLoadingFinished);
+            public void getElementsOfPage(int pageNumber, OnLoadingFinished<T> onPageLoadingFinished, OnError onError) {
+                elementsLoader.getElementsOfPage(this, onPageLoadingFinished, onError);
             }
         };
     }
