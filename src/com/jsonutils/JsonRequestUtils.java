@@ -20,9 +20,9 @@ public class JsonRequestUtils {
     }
 
     public static <T> Iterator<T> getNavigationIterator(final String url,
-                                            final Map<String, Object> params,
-                                            final String offsetParamName,
-                                            final Class<T> aClass) {
+                                                        final Map<String, Object> params,
+                                                        final String offsetParamName,
+                                                        final Class<T> aClass) {
         return new JsonRequestNavigation<T>(url, params, offsetParamName, aClass).getNavigationIterator();
     }
 

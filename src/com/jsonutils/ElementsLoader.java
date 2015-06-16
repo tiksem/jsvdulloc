@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
-* Created by CM on 1/25/2015.
-*/
+ * Created by CM on 1/25/2015.
+ */
 class ElementsLoader<T> {
     private String url;
     private Map<String, Object> params;
@@ -46,14 +46,14 @@ class ElementsLoader<T> {
             }
             result = Json.readList(json, responseKey, aClass);
         } catch (IOException e) {
-            if(ioExceptionListener != null){
+            if (ioExceptionListener != null) {
                 ioExceptionListener.onIOError(e);
             }
 
             onError.onError(e);
         }
 
-        if(result == null){
+        if (result == null) {
             onLoadingFinished.onLoadingFinished(Collections.<T>emptyList(), false);
         } else {
             onLoadingFinished.onLoadingFinished(result, result.isEmpty());

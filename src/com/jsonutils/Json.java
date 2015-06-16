@@ -23,7 +23,7 @@ public class Json {
         JsonNode errorNode = mapper.readValue(parser, JsonNode.class);
 
         JsonNode error = errorNode.get("error");
-        if(error != null){
+        if (error != null) {
             ExceptionInfo info = new ExceptionInfo();
             info.setError(error.asText());
             info.setMessage(errorNode.get("message").asText());
