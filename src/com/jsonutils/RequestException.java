@@ -9,7 +9,7 @@ public class RequestException extends IOException {
     private ExceptionInfo exceptionInfo;
 
     public RequestException(ExceptionInfo exceptionInfo) {
-        super(exceptionInfo.getMessage());
+        super(exceptionInfo.getMessage() != null ? exceptionInfo.getMessage() : "Unknown error");
         this.exceptionInfo = exceptionInfo;
     }
 
