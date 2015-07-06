@@ -8,10 +8,12 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -103,5 +105,21 @@ public class Json {
         JavaType type = typeFactory.constructCollectionLikeType(List.class, aClass);
 
         return mapper.readValue(parser, type);
+    }
+
+    public static List<Long> toLongArray(ArrayNode arrayNode) {
+        int size = arrayNode.size();
+        List<Long> result = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            result.add(arrayNode.get(i).asLong());
+        }
+
+        return result;
+    }
+
+    public static List<Long> parseLongArray(String json, String key) throws IOException {
+        JsonNode jsonNode = Json.toJsonNode(json);
+        checkError(jsonNode);
+        return toLongArray((ArrayNode) jsonNode.get(key));
     }
 }
