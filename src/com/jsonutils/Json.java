@@ -117,9 +117,25 @@ public class Json {
         return result;
     }
 
+    public static List<String> toStringArray(ArrayNode arrayNode) {
+        int size = arrayNode.size();
+        List<String> result = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            result.add(arrayNode.get(i).asText());
+        }
+
+        return result;
+    }
+
     public static List<Long> parseLongArray(String json, String key) throws IOException {
         JsonNode jsonNode = Json.toJsonNode(json);
         checkError(jsonNode);
         return toLongArray((ArrayNode) jsonNode.get(key));
+    }
+
+    public static List<String> parseStringArray(String json, String key) throws IOException {
+        JsonNode jsonNode = Json.toJsonNode(json);
+        checkError(jsonNode);
+        return toStringArray((ArrayNode) jsonNode.get(key));
     }
 }
