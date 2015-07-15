@@ -44,8 +44,11 @@ public class Json {
     }
 
     public static JsonNode toJsonNode(String json) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        ObjectMapper mapper = createMapper();
+        return getJsonNode(json, mapper);
+    }
+
+    public static JsonNode getJsonNode(String json, ObjectMapper mapper) throws IOException {
         JsonFactory jsonFactory = new JsonFactory();
         JsonParser parser = jsonFactory.createParser(json);
         return mapper.readValue(parser, JsonNode.class);
@@ -58,41 +61,47 @@ public class Json {
     }
 
     public static void checkError(String json) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         JsonFactory jsonFactory = new JsonFactory();
         JsonParser parser = jsonFactory.createParser(json);
 
         checkError(new ObjectMapper(), parser);
     }
 
-    public static <T> T read(String json, Class<T> aClass) throws IOException {
+    public static ObjectMapper createMapper() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        JsonFactory jsonFactory = new JsonFactory();
-        JsonParser parser = jsonFactory.createParser(json);
+        return mapper;
+    }
 
-        checkError(mapper, parser);
+    public static <T> T readNoThrow(String json, Class<T> aClass) {
+        try {
+            return read(json, aClass);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-        return mapper.readValue(jsonFactory.createParser(json), aClass);
+    public static <T> T read(String json, Class<T> aClass) throws IOException {
+        ObjectMapper mapper = createMapper();
+        JsonNode jsonNode = getJsonNode(json, mapper);
+        checkError(jsonNode);
+
+        return mapper.readValue(jsonNode.traverse(), aClass);
     }
 
     public static <T> List<T> readList(String json, String key, Class<T> aClass) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        ObjectMapper mapper = createMapper();
+        JsonNode jsonNode = getJsonNode(json, mapper);
+        checkError(jsonNode);
 
-        JsonFactory jsonFactory = new JsonFactory();
-        JsonParser parser = jsonFactory.createParser(json);
+        JavaType type = getListType(aClass, mapper);
+        return mapper.readValue(jsonNode.get(key).traverse(), type);
+    }
 
-        checkError(mapper, parser);
-
+    private static <T> JavaType getListType(Class<T> aClass, ObjectMapper mapper) {
         TypeFactory typeFactory = mapper.getTypeFactory();
-        JavaType type = typeFactory.constructMapType(Map.class,
-                typeFactory.constructType(String.class),
-                typeFactory.constructCollectionType(List.class, aClass));
-        Map<String, List<T>> map =
-                mapper.readValue(jsonFactory.createParser(json), type);
-        return map.get(key);
+        return typeFactory.constructCollectionType(List.class, aClass);
     }
 
     public static <T> List<T> parseJsonArray(String json, Class<T> aClass) throws IOException {
@@ -101,8 +110,7 @@ public class Json {
         JsonFactory jsonFactory = new JsonFactory();
         JsonParser parser = jsonFactory.createParser(json);
 
-        TypeFactory typeFactory = mapper.getTypeFactory();
-        JavaType type = typeFactory.constructCollectionLikeType(List.class, aClass);
+        JavaType type = getListType(aClass, mapper);
 
         return mapper.readValue(parser, type);
     }
