@@ -1,7 +1,7 @@
 package com.jsonutils;
 
 import com.utils.framework.OnError;
-import com.utils.framework.collections.NavigationEntity;
+import com.utils.framework.collections.PageLoadingEntity;
 import com.utils.framework.collections.OnLoadingFinished;
 import com.utils.framework.io.IOExceptionListener;
 import com.utils.framework.io.Network;
@@ -30,7 +30,7 @@ class ElementsLoader<T> {
         this.aClass = aClass;
     }
 
-    public void getElementsOfPage(NavigationEntity<T> navigationEntity,
+    public void getElementsOfPage(PageLoadingEntity<T> navigationEntity,
                                   OnLoadingFinished<T> onLoadingFinished,
                                   OnError onError) {
         int offset = navigationEntity.getLoadedElementsCount();

@@ -1,10 +1,9 @@
 package com.jsonutils;
 
 import com.utils.framework.OnError;
-import com.utils.framework.collections.NavigationEntity;
-import com.utils.framework.collections.NavigationIterator;
-import com.utils.framework.collections.NavigationList;
+import com.utils.framework.collections.LazyLoadingList;
 import com.utils.framework.collections.OnLoadingFinished;
+import com.utils.framework.collections.PageLoadingIterator;
 import com.utils.framework.io.IOExceptionListener;
 
 import java.util.Iterator;
@@ -20,8 +19,8 @@ public class JsonRequestNavigation<T> {
         elementsLoader = new ElementsLoader<T>(url, params, offsetParamName, aClass);
     }
 
-    public NavigationList<T> getNavigationList() {
-        return new NavigationList<T>() {
+    public LazyLoadingList<T> getLazyLoadingList() {
+        return new LazyLoadingList<T>() {
             @Override
             public void getElementsOfPage(int pageNumber, OnLoadingFinished<T> onPageLoadingFinished, OnError onError) {
                 elementsLoader.getElementsOfPage(this, onPageLoadingFinished, onError);
@@ -30,7 +29,7 @@ public class JsonRequestNavigation<T> {
     }
 
     public Iterator<T> getNavigationIterator() {
-        return new NavigationIterator<T>() {
+        return new PageLoadingIterator<T>() {
             @Override
             public void getElementsOfPage(int pageNumber, OnLoadingFinished<T> onPageLoadingFinished, OnError onError) {
                 elementsLoader.getElementsOfPage(this, onPageLoadingFinished, onError);

@@ -1,8 +1,6 @@
 package com.jsonutils;
 
-import com.utils.framework.collections.NavigationIterator;
-import com.utils.framework.collections.NavigationList;
-import com.utils.framework.collections.OnLoadingFinished;
+import com.utils.framework.collections.LazyLoadingList;
 
 import java.util.*;
 
@@ -11,12 +9,12 @@ import java.util.*;
  */
 public class JsonRequestUtils {
 
-    public static <T> NavigationList<T> getNavigationList(final String url,
+    public static <T> LazyLoadingList<T> getLazyLoadingList(final String url,
                                                           final Map<String, Object> params,
                                                           final String offsetParamName,
                                                           final Class<T> aClass) {
 
-        return new JsonRequestNavigation<T>(url, params, offsetParamName, aClass).getNavigationList();
+        return new JsonRequestNavigation<T>(url, params, offsetParamName, aClass).getLazyLoadingList();
     }
 
     public static <T> Iterator<T> getNavigationIterator(final String url,
