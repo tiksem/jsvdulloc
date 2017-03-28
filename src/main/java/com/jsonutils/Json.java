@@ -90,7 +90,7 @@ public class Json {
         return mapper.readValue(jsonNode.traverse(), aClass);
     }
 
-    public static <T> List<T> readList(String json, String key, Class<T> aClass) throws IOException {
+    public static <T> List<T> readList(String json, String key, Class<? extends T> aClass) throws IOException {
         ObjectMapper mapper = createMapper();
         JsonNode jsonNode = getJsonNode(json, mapper);
         checkError(jsonNode);
@@ -104,7 +104,7 @@ public class Json {
         return typeFactory.constructCollectionType(List.class, aClass);
     }
 
-    public static <T> List<T> parseJsonArray(String json, Class<T> aClass) throws IOException {
+    public static <T> List<T> parseJsonArray(String json, Class<? extends T> aClass) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         JsonFactory jsonFactory = new JsonFactory();
